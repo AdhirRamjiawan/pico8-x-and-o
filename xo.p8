@@ -11,6 +11,17 @@ local state = {
 	{0,0,0}
 }
 
+function resetGame()
+  playerPosition = { x = 30, y =30, stateIndex = 1 }
+  currentPlayer = "x"
+  hasWon = false
+  state = {
+	{0,0,0},
+	{0,0,0},
+	{0,0,0}
+}  
+end
+
 function checkWin()
    
   -- row checks
@@ -93,16 +104,25 @@ end
 
 function _update()
   local movement = 30
-  if btnp(0) then
-	playerPosition.x -= movement
-  elseif btnp(1) then
-	playerPosition.x += movement
-  elseif btnp(2) then
-	playerPosition.y -= movement
-  elseif btnp(3) then
-	playerPosition.y += movement
+  
+  if hasWon then
+   
+    if btnp(4) then
+	  resetGame()
+	end
+  
+    return
   end
   
+  if btnp(0) and playerPosition.x > 30 then
+	playerPosition.x -= movement
+  elseif btnp(1) and playerPosition.x < 90 then
+	playerPosition.x += movement
+  elseif btnp(2) and playerPosition.y > 30 then
+	playerPosition.y -= movement
+  elseif btnp(3) and playerPosition.y < 90 then
+	playerPosition.y += movement
+  end
   
   if btnp(4) then
     if (currentPlayer == "x") then
@@ -136,7 +156,8 @@ function _draw()
   drawPlayerPosition()
   
   if hasWon then
-    print("Win!!!", 50, 50, 6)
+    print(currentPlayer .. " wins!!!", 30, 50, 6)
+	print("press z to restart", 30, 60, 6)
   end
 end
 
